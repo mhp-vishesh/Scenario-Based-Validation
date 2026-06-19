@@ -4,7 +4,7 @@
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "pip3 install --user -r requirements.txt",
+  "postCreateCommand": "pip install -r POC/requirements.txt",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -27,5 +27,5 @@
   "containerEnv": {
     "MOCK_MODE": "true"
   },
-  "postStartCommand": "echo 'Run: streamlit run dashboard/app.py'"
+  "postStartCommand": "echo 'Run: streamlit run POC/dashboard/app.py'"
 }

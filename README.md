@@ -11,13 +11,13 @@ Closed-loop synthetic scenario generation and automated safety validation for AD
 2. Wait for the environment to build (about 2 minutes)
 3. Run in the terminal:
    ```bash
-   streamlit run dashboard/app.py
+   streamlit run POC/dashboard/app.py
    ```
 4. Click the forwarded port link (8501) when it appears
 
 **Option 2: One-liner clone and run**
 ```bash
-git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git && cd Scenario-Based-Validation && pip3 install -r requirements.txt && MOCK_MODE=true streamlit run dashboard/app.py
+git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git && cd Scenario-Based-Validation && pip install -r POC/requirements.txt && MOCK_MODE=true streamlit run POC/dashboard/app.py
 ```
 
 ---
@@ -39,38 +39,34 @@ The goal: find failure modes the test fleet never encountered, with no extra dat
 ```
 .
 ├── README.md                 # This file
-├── config/
-│   ├── scenario_matrix.yaml  # Axes for scenario fan-out (weather, light, actors, etc.)
-│   └── judge_rubric.yaml     # Rubric for Cosmos Reason verdicts
-├── seeds/                    # Place seed clips here (mp4/png sequences)
-├── outputs/                  # Generated clips, verdicts, realism scores
-│   └── manifest.json         # Full run manifest (reproducibility log)
-├── scripts/
-│   ├── setup_aws.sh          # Instance launch and environment bootstrap
-│   ├── pull_models.sh        # Clone repos and download checkpoints
-│   ├── generate.py           # Batch scenario generation (Transfer + Predict)
-│   ├── validate.py           # Run system under test + judge
-│   └── export_report.py      # Generate the SOTIF-style PDF report
-├── src/
-│   ├── cosmos_wrapper.py     # Thin wrappers around Cosmos inference
-│   ├── judge.py              # Cosmos Reason judge with structured output
-│   ├── evaluator.py          # Cosmos Evaluator realism scoring
-│   ├── manifest.py           # Manifest read/write helpers
-│   └── utils.py              # Shared utilities
-├── dashboard/
-│   ├── app.py                # Streamlit dashboard entry point
-│   ├── pages/
-│   │   ├── overview.py       # Metrics and coverage heatmap
-│   │   └── failures.py       # Failure gallery with clip playback
-│   └── mock_data/            # Sample data for offline demo mode
-├── tests/                    # Unit and integration tests
-├── assets/
-│   └── poc_plan_diagram.png  # Architecture diagram for docs/slides
-├── tools/
-│   ├── make_diagram.py       # Regenerate the architecture diagram
-│   └── make_docx.py          # Regenerate the plan DOCX
-├── requirements.txt          # Python dependencies
-└── Dockerfile                # Container for generation and validation
+├── .devcontainer/            # GitHub Codespaces config
+├── POC/
+│   ├── config/
+│   │   ├── scenario_matrix.yaml  # Axes for scenario fan-out
+│   │   └── judge_rubric.yaml     # Rubric for Cosmos Reason verdicts
+│   ├── scripts/
+│   │   ├── setup_aws.sh          # Instance launch and bootstrap
+│   │   ├── pull_models.sh        # Download model checkpoints
+│   │   ├── generate.py           # Batch scenario generation
+│   │   ├── validate.py           # Run system under test + judge
+│   │   └── export_report.py      # Generate PDF report
+│   ├── src/
+│   │   ├── cosmos_wrapper.py     # Cosmos model wrappers
+│   │   ├── judge.py              # Cosmos Reason judge
+│   │   ├── evaluator.py          # Realism scoring
+│   │   ├── manifest.py           # Manifest helpers
+│   │   └── utils.py              # Shared utilities
+│   ├── dashboard/
+│   │   ├── app.py                # Streamlit dashboard
+│   │   └── mock_data/            # Sample data for demo mode
+│   ├── tests/                    # Unit tests
+│   ├── requirements.txt          # Python dependencies
+│   └── Dockerfile                # Container build
+├── cosmos/                   # NVIDIA Cosmos submodules
+│   ├── Cosmos-Predict2.5/
+│   ├── Cosmos-Transfer2.5/
+│   └── Cosmos-Reason1/
+└── assets/                   # Diagrams and docs
 ```
 
 ---
@@ -93,17 +89,18 @@ Run the dashboard without a GPU to preview the UI and demo flow.
 
 ```bash
 # Clone and enter the repo
-cd Github-POC-11062026
+git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git
+cd Scenario-Based-Validation
 
 # Create a virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r POC/requirements.txt
 
 # Run the dashboard in mock mode
-MOCK_MODE=1 streamlit run dashboard/app.py
+MOCK_MODE=true streamlit run POC/dashboard/app.py
 ```
 
 Open http://localhost:8501 to explore the coverage heatmap and failure gallery with sample data.
