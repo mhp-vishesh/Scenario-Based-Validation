@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Outputs (large generated files - keep on S3)
+outputs/clips/
+outputs/sut/
+*.mp4
+*.avi
+
+# Keep manifest and mock data
+!outputs/manifest.json
+!dashboard/mock_data/
+
+# Model checkpoints (download on AWS, not in repo)
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# Logs
+*.log
+logs/
+
+# Secrets
+.env
+*.env
+secrets.yaml
