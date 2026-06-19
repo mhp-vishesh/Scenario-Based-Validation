@@ -1,0 +1,9 @@
+[submodule "cosmos/Cosmos-Predict2.5"]
+	path = cosmos/Cosmos-Predict2.5
+	url = https://github.com/nvidia-cosmos/Cosmos-Predict2.5.git
+[submodule "cosmos/Cosmos-Transfer2.5"]
+	path = cosmos/Cosmos-Transfer2.5
+	url = https://github.com/nvidia-cosmos/Cosmos-Transfer2.5.git
+[submodule "cosmos/Cosmos-Reason1"]
+	path = cosmos/Cosmos-Reason1
+	url = https://github.com/nvidia-cosmos/Cosmos-Reason1.git
