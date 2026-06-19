@@ -17,7 +17,7 @@ Closed-loop synthetic scenario generation and automated safety validation for AD
 
 **Option 2: One-liner clone and run**
 ```bash
-git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git && cd Scenario-Based-Validation && pip install -r requirements.txt && MOCK_MODE=true streamlit run dashboard/app.py
+git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git && cd Scenario-Based-Validation && pip3 install -r requirements.txt && MOCK_MODE=true streamlit run dashboard/app.py
 ```
 
 ---
