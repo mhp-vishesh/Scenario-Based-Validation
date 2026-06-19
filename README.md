@@ -59,13 +59,13 @@ The goal: find failure modes the test fleet never encountered, with no extra dat
 │   ├── dashboard/
 │   │   ├── app.py                # Streamlit dashboard
 │   │   └── mock_data/            # Sample data for demo mode
+│   ├── cosmos/                   # NVIDIA Cosmos submodules
+│   │   ├── Cosmos-Predict2.5/
+│   │   ├── Cosmos-Transfer2.5/
+│   │   └── Cosmos-Reason1/
 │   ├── tests/                    # Unit tests
 │   ├── requirements.txt          # Python dependencies
 │   └── Dockerfile                # Container build
-├── cosmos/                   # NVIDIA Cosmos submodules
-│   ├── Cosmos-Predict2.5/
-│   ├── Cosmos-Transfer2.5/
-│   └── Cosmos-Reason1/
 └── assets/                   # Diagrams and docs
 ```
 

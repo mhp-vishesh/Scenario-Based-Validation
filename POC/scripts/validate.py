@@ -3,6 +3,9 @@
 
 Usage:
     python scripts/validate.py --clips outputs/ --manifest outputs/manifest.json --rubric config/judge_rubric.yaml
+
+The system under test is YOLO v8 for object detection. The judge (Cosmos Reason)
+evaluates whether the SUT detected hazards correctly and in time.
 """
 import argparse
 import json
@@ -16,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from judge import Judge
 from evaluator import RealistmEvaluator
 from manifest import Manifest
+from sut import create_sut, SystemUnderTest
 from utils import (
     load_yaml,
     ensure_dir,
@@ -31,7 +35,8 @@ def parse_args():
     parser.add_argument("--clips", required=True, help="Path to generated clips directory")
     parser.add_argument("--manifest", required=True, help="Path to manifest file")
     parser.add_argument("--rubric", required=True, help="Path to judge rubric YAML")
-    parser.add_argument("--sut", help="Path to system-under-test model/script")
+    parser.add_argument("--yolo-model", default="yolov8n.pt", help="YOLO model variant (n/s/m/l/x)")
+    parser.add_argument("--confidence", type=float, default=0.5, help="Detection confidence threshold")
     parser.add_argument("--reason-checkpoint", help="Path to Cosmos Reason checkpoint")
     parser.add_argument("--evaluator-checkpoint", help="Path to Cosmos Evaluator checkpoint")
     parser.add_argument("--output", default="outputs/", help="Output directory for results")
@@ -39,53 +44,18 @@ def parse_args():
     return parser.parse_args()
 
 
-class MockSystemUnderTest:
-    """Mock SUT for development when no real model is available."""
+def load_sut(model: str = "yolov8n.pt", confidence: float = 0.5) -> SystemUnderTest:
+    """Load the YOLO v8 system under test.
     
-    def __init__(self, model_path: str = None):
-        self.model_path = model_path
-        logger.info(f"[MockSUT] Initialized (model_path={model_path})")
-    
-    def run(self, video_frames: list) -> dict:
-        """Run detection/planning on video frames.
+    Args:
+        model: YOLO model variant (yolov8n/s/m/l/x.pt)
+        confidence: Detection confidence threshold
         
-        Returns:
-            Dict with detections, chosen action, timing info
-        """
-        import random
-        
-        num_frames = len(video_frames) if video_frames else 100
-        
-        # Simulate detection results
-        detected = random.random() > 0.2  # 80% detection rate
-        detection_frame = random.randint(10, num_frames // 2) if detected else None
-        
-        # Simulate action
-        actions = ["brake", "steer_left", "steer_right", "maintain", "accelerate"]
-        action = random.choice(actions[:3]) if detected else "maintain"
-        action_frame = detection_frame + random.randint(5, 15) if detected else None
-        
-        return {
-            "detections": [
-                {"class": "hazard", "confidence": random.uniform(0.7, 0.99), "frame": detection_frame}
-            ] if detected else [],
-            "action": action,
-            "detection_frame": detection_frame,
-            "action_frame": action_frame,
-            "model": "mock_sut",
-        }
-
-
-def load_sut(sut_path: str):
-    """Load the system under test.
-    
-    For now, returns a mock SUT. Replace with actual model loading.
+    Returns:
+        Configured SystemUnderTest with YOLO v8 detector
     """
-    # TODO: Load actual SUT model
-    # if sut_path and Path(sut_path).exists():
-    #     # Load real model
-    #     pass
-    return MockSystemUnderTest(sut_path)
+    logger.info(f"Loading YOLO v8 SUT: model={model}, confidence={confidence}")
+    return create_sut(model=model, confidence=confidence)
 
 
 def main():
@@ -112,7 +82,7 @@ def main():
         checkpoint_path=args.reason_checkpoint,
     )
     evaluator = RealistmEvaluator(args.evaluator_checkpoint)
-    sut = load_sut(args.sut)
+    sut = load_sut(model=args.yolo_model, confidence=args.confidence)
     
     # Ensure output directories
     output_dir = ensure_dir(args.output)

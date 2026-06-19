@@ -9,10 +9,14 @@ reportlab>=4.0.0
 
 # Image handling
 pillow>=10.0.0
+opencv-python>=4.8.0
 
 # Utilities
 pyyaml>=6.0.0
 tqdm>=4.66.0
+
+# System Under Test - YOLO v8
+ultralytics>=8.0.0
 
 # For Cosmos wrappers (only needed on GPU instances)
 # torch>=2.1.0

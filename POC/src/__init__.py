@@ -3,6 +3,7 @@ from .cosmos_wrapper import CosmosPredict, CosmosTransfer, CosmosReason
 from .judge import Judge
 from .evaluator import RealistmEvaluator, ArtifactDetector
 from .manifest import Manifest
+from .sut import YOLOv8Detector, SystemUnderTest, create_sut
 from .utils import (
     load_yaml,
     save_json,
@@ -23,6 +24,9 @@ __all__ = [
     "RealistmEvaluator",
     "ArtifactDetector",
     "Manifest",
+    "YOLOv8Detector",
+    "SystemUnderTest",
+    "create_sut",
     "load_yaml",
     "save_json",
     "load_json",
