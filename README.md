@@ -2,6 +2,26 @@
 
 Closed-loop synthetic scenario generation and automated safety validation for ADAS, built on NVIDIA Cosmos and AWS.
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mhp-vishesh/Scenario-Based-Validation?quickstart=1)
+
+## Run from GitHub (no local setup)
+
+**Option 1: GitHub Codespaces (recommended)**
+1. Click the badge above or go to the repo and click **Code > Codespaces > Create codespace on main**
+2. Wait for the environment to build (about 2 minutes)
+3. Run in the terminal:
+   ```bash
+   streamlit run dashboard/app.py
+   ```
+4. Click the forwarded port link (8501) when it appears
+
+**Option 2: One-liner clone and run**
+```bash
+git clone https://github.com/mhp-vishesh/Scenario-Based-Validation.git && cd Scenario-Based-Validation && pip install -r requirements.txt && MOCK_MODE=true streamlit run dashboard/app.py
+```
+
+---
+
 ## What this does
 
 1. Takes a small set of real or simulated driving clips (seed clips).
