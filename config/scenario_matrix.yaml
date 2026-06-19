@@ -1,0 +1,61 @@
+# Scenario Matrix Configuration
+# Defines the axes for scenario fan-out in synthetic data generation
+
+# Environmental conditions
+weather:
+  - clear
+  - rain
+  - fog
+  - snow
+  - wet_road
+
+# Lighting conditions
+lighting:
+  - day
+  - dusk
+  - night
+  - low_sun_glare
+  - tunnel_transition
+
+# Actor types to inject
+actors:
+  - pedestrian
+  - cyclist
+  - motorcycle
+  - stalled_vehicle
+  - animal
+
+# Actor behaviours
+behaviour:
+  - jaywalk_cut_in
+  - sudden_braking
+  - occluded_emergence
+  - lane_change_no_signal
+  - running_red_light
+
+# Road geometry
+geometry:
+  - signalized_intersection
+  - unprotected_left
+  - merge
+  - roundabout
+  - highway_exit
+
+# Generation settings
+generation:
+  clips_per_combination: 3      # Number of variants per scenario cell
+  video_length_seconds: 5       # Duration of each generated clip
+  resolution: [1280, 720]       # Output resolution
+  fps: 30                       # Frames per second
+  random_seed_base: 42          # Base seed for reproducibility
+
+# Control inputs for Cosmos Transfer
+control_inputs:
+  - segmentation
+  - depth
+  - hdmap
+
+# Sampling strategy (full = all combinations, random = sample subset)
+sampling:
+  strategy: random              # 'full' or 'random'
+  max_scenarios: 500            # Max scenarios when using random sampling

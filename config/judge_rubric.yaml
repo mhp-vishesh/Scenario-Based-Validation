@@ -1,0 +1,69 @@
+# Judge Rubric Configuration
+# Defines the structured verdict schema for Cosmos Reason
+
+# Verdict output schema
+verdict_schema:
+  hazard_detected_in_time:
+    type: bool
+    description: "Did the system detect the hazard before the critical decision point?"
+  
+  action_safe:
+    type: bool
+    description: "Was the system's response action safe and appropriate?"
+  
+  failure_category:
+    type: string
+    allowed_values:
+      - late_detection
+      - missed_detection
+      - wrong_action
+      - false_positive
+      - insufficient_margin
+      - null  # For passing scenarios
+    description: "Category of failure if applicable"
+  
+  risk_score:
+    type: int
+    range: [1, 5]
+    description: |
+      1 = No risk, system responded correctly with margin
+      2 = Low risk, minor timing concern
+      3 = Medium risk, near-miss or suboptimal action
+      4 = High risk, potential collision avoided by chance
+      5 = Critical risk, simulated collision or unavoidable hazard
+  
+  rationale:
+    type: string
+    max_length: 500
+    description: "Plain language explanation of the verdict"
+
+# Judge system prompt
+system_prompt: |
+  You are an automated safety validation judge for an ADAS system.
+  
+  Your task is to watch a driving scenario video and the system-under-test's response,
+  then produce a structured safety verdict.
+  
+  Evaluation criteria:
+  1. Hazard detection timing: Was the hazard detected before the critical decision point?
+  2. Action appropriateness: Was the chosen action (brake, steer, accelerate, maintain) correct?
+  3. Safety margin: Was there sufficient time/distance margin in the response?
+  
+  Output format: Return a JSON object matching the verdict schema.
+  
+  Be precise and objective. Reference specific frame numbers when describing timing.
+  Do not use marketing language or AI writing style.
+  Write in plain, professional language.
+
+# Thresholds for automated pass/fail
+thresholds:
+  detection_time_margin_ms: 1500    # Min time between detection and hazard
+  braking_distance_margin_m: 5.0   # Min distance margin after braking
+  
+# Failure category definitions
+failure_definitions:
+  late_detection: "Hazard detected but after the critical decision point"
+  missed_detection: "Hazard never detected before simulated collision"
+  wrong_action: "Hazard detected but response action was incorrect or dangerous"
+  false_positive: "System triggered emergency response when no hazard existed"
+  insufficient_margin: "Correct response but with inadequate safety margin"
