@@ -1,0 +1,152 @@
+[
+  {
+    "clip_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY_fog_dusk_pedestrian_occluded_emergence_000",
+    "seed_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY",
+    "scenario": {
+      "weather": "fog",
+      "lighting": "dusk",
+      "actors": [
+        "pedestrian"
+      ],
+      "behaviour": "occluded_emergence",
+      "geometry": "highway_exit"
+    },
+    "generation": {
+      "model": "cosmos-predict2.5-2b",
+      "prompt": "A motorway driving scene in dense fog with limited visibility, dusk with long shadows. a pedestrian is emerging from behind a vehicle into the lane.",
+      "num_frames": 93,
+      "reused": true
+    },
+    "validation": {
+      "verdict": {
+        "hazard_detected_in_time": false,
+        "action_safe": true,
+        "failure_category": "unknown",
+        "risk_score": 3,
+        "rationale": "The pedestrian was already present by frame 29, but the system only detected and initiated braking at frame 40, indicating a delayed response. While braking is appropriate to mitigate risk, the late detection reduces the safety margin, as the pedestrian could have been closer or moved into the ego vehicle's path before the reaction. The sustained braking until frame 45 reflects caution, but the delay in detection increases the risk of a collision."
+      },
+      "realism_score": 0.701,
+      "clip_path": "clips/20151221120048-D6-AGGRESSIVE-MOTORWAY_fog_dusk_pedestrian_occluded_emergence_000.mp4",
+      "yolo_keyframe": "sut/20151221120048-D6-AGGRESSIVE-MOTORWAY_fog_dusk_pedestrian_occluded_emergence_000_yolo.jpg",
+      "sut_summary": {
+        "action": "brake",
+        "detection_frame": 40,
+        "total_hazards": 8,
+        "num_frames": 93,
+        "class_counts": {
+          "car": 123,
+          "truck": 67,
+          "person": 8
+        },
+        "model": "yolov8n.pt"
+      },
+      "model_metadata": {
+        "model": "/home/ubuntu/cosmos-models/reason-2-8b",
+        "raw_response": "<think>\nOkay, let's see. The scenario describes a situation where the ego vehicle is driving on a highway exit road under foggy conditions with reduced visibility. There's a pedestrian occluded and emerging near the right side of the road. The system under test detected this pedestrian as a hazard and initiated braking at frame 40, continuing until frame 45.\n\nFirst, I need to check if the hazard was detected before the critical decision point. The pedestrian becomes visible around frame 29, and the system starts reacting at frame 40. Since the pedestrian is already present by frame 29, the detection happens after the pedestrian has appeared but before the action is taken. That means the system didn't detect the hazard until after it was already there, which might be too late to avoid a collision entirely.\n\nNext, the action taken was braking. In such situations, braking is appropriate to slow down and prepare for a possible stop if the pedestrian steps into the lane. However, the timing here is crucial. If the pedestrian is just emerging and not yet in the path, braking might be premature, but if they're close enough, it's necessary. The system maintained braking until frame 45, which suggests sustained caution, but given the fog and reduced visibility, maybe more time was needed to assess the exact position of the pedestrian.\n\nThe safety margin is another factor. The pedestrian is on the right side, partially visible. The ego vehicle is moving forward, so even if the pedestrian starts crossing, the braking should provide enough stopping distance. But with fog, reaction time might be slower. The system's continued braking until frame 45 indicates they're maintaining a safe distance, but if the pedestrian wasn't in the immediate path, maybe they could have continued without braking, thus avoiding unnecessary deceleration.\n\nSo, the main issues are the delayed detection (after the pedestrian was already present) and the appropriateness of the braking action. While braking is correct, the timing suggests the system might have reacted after the hazard was already established, leading to a potential safety issue. The failure category would likely be \"Late Detection of Pedestrian\" because the system didn't catch the pedestrian until after they were already in the vicinity.\n</think>\n\n<answer>\n{\n  \"hazard_detected_in_time\": false,\n  \"action_safe\": true,\n  \"failure_category\": \"Late Detection of Pedestrian\",\n  \"risk_score\": 3,\n  \"rationale\": \"The pedestrian was already present by frame 29, but the system only detected and initiated braking at frame 40, indicating a delayed response. While braking is appropriate to mitigate risk, the late detection reduces the safety margin, as the pedestrian could have been closer or moved into the ego vehicle's path before the reaction. The sustained braking until frame 45 reflects caution, but the delay in detection increases the risk of a collision.\"\n}\n",
+        "fps": 4,
+        "max_tokens": 4096
+      }
+    },
+    "created_at": "2026-06-26T05:55:42.751297"
+  },
+  {
+    "clip_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY_rain_night_stalled_vehicle_sudden_braking_001",
+    "seed_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY",
+    "scenario": {
+      "weather": "rain",
+      "lighting": "night",
+      "actors": [
+        "stalled_vehicle"
+      ],
+      "behaviour": "sudden_braking",
+      "geometry": "merge"
+    },
+    "generation": {
+      "model": "cosmos-predict2.5-2b",
+      "prompt": "A motorway driving scene in heavy rain with wet reflective road, night with headlights and streetlights. a stalled vehicle blocking the lane is forcing a sudden brake ahead.",
+      "num_frames": 93,
+      "reused": true
+    },
+    "validation": {
+      "verdict": {
+        "hazard_detected_in_time": false,
+        "action_safe": false,
+        "failure_category": "unknown",
+        "risk_score": 5,
+        "rationale": "The system failed to detect the stopped vehicle ahead, which caused other vehicles to brake suddenly. By maintaining speed instead of slowing down or stopping, the ego vehicle created a high risk of collision with the stalled car and following traffic."
+      },
+      "realism_score": 0.68,
+      "clip_path": "clips/20151221120048-D6-AGGRESSIVE-MOTORWAY_rain_night_stalled_vehicle_sudden_braking_001.mp4",
+      "yolo_keyframe": "sut/20151221120048-D6-AGGRESSIVE-MOTORWAY_rain_night_stalled_vehicle_sudden_braking_001_yolo.jpg",
+      "sut_summary": {
+        "action": "maintain",
+        "detection_frame": null,
+        "total_hazards": 0,
+        "num_frames": 93,
+        "class_counts": {
+          "car": 104,
+          "truck": 6
+        },
+        "model": "yolov8n.pt"
+      },
+      "model_metadata": {
+        "model": "/home/ubuntu/cosmos-models/reason-2-8b",
+        "raw_response": "<think>\nOkay, let's see. The user provided a detailed driving scenario and the system's response. I need to evaluate if the system detected the hazard correctly and took appropriate action.\n\nFirst, the scenario mentions a stalled vehicle ahead that causes sudden braking by other cars. The system's output shows no hazards detected throughout all frames. The chosen action was \"maintain,\" which means the driver kept going without changing speed or lane. \n\nBut wait, there's a car ahead that's stopped, right? If other vehicles are braking suddenly because of that, the correct response would be to slow down or stop to avoid a collision. Since the system didn't detect any hazard and continued maintaining speed, that's risky. Even though the exact timing isn't specified, the presence of a stopped car should trigger a reaction. So the system failed to detect the hazard in time, leading to an unsafe situation. The failure category here would be missing the hazard detection, hence a safety issue.\n</think>\n\n<answer>\n```json\n{\n  \"hazard_detected_in_time\": false,\n  \"action_safe\": false,\n  \"failure_category\": \"Missed Hazard\",\n  \"risk_score\": 5,\n  \"rationale\": \"The system failed to detect the stopped vehicle ahead, which caused other vehicles to brake suddenly. By maintaining speed instead of slowing down or stopping, the ego vehicle created a high risk of collision with the stalled car and following traffic.\"\n}\n```",
+        "fps": 4,
+        "max_tokens": 4096
+      }
+    },
+    "created_at": "2026-06-26T05:56:03.242326"
+  },
+  {
+    "clip_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY_clear_low_sun_glare_cyclist_jaywalk_cut_in_002",
+    "seed_id": "20151221120048-D6-AGGRESSIVE-MOTORWAY",
+    "scenario": {
+      "weather": "clear",
+      "lighting": "low_sun_glare",
+      "actors": [
+        "cyclist"
+      ],
+      "behaviour": "jaywalk_cut_in",
+      "geometry": "merge"
+    },
+    "generation": {
+      "model": "cosmos-predict2.5-2b",
+      "prompt": "A motorway driving scene in clear weather, low sun causing glare. a cyclist is cutting across the road in front of the car.",
+      "num_frames": 93,
+      "reused": true
+    },
+    "validation": {
+      "verdict": {
+        "hazard_detected_in_time": false,
+        "action_safe": false,
+        "failure_category": "unknown",
+        "risk_score": 4,
+        "rationale": "The cyclist was detected at frame 22 with high confidence, but the braking action started at frame 27, indicating a 5-frame delay. This delay likely left insufficient time to fully stop and avoid a collision, especially given the sudden jaywalking action of the cyclist. The system recognized the hazard but failed to respond promptly enough to prevent a potential accident."
+      },
+      "realism_score": 0.717,
+      "clip_path": "clips/20151221120048-D6-AGGRESSIVE-MOTORWAY_clear_low_sun_glare_cyclist_jaywalk_cut_in_002.mp4",
+      "yolo_keyframe": "sut/20151221120048-D6-AGGRESSIVE-MOTORWAY_clear_low_sun_glare_cyclist_jaywalk_cut_in_002_yolo.jpg",
+      "sut_summary": {
+        "action": "brake",
+        "detection_frame": 22,
+        "total_hazards": 113,
+        "num_frames": 93,
+        "class_counts": {
+          "car": 257,
+          "truck": 32,
+          "person": 73,
+          "bicycle": 40
+        },
+        "model": "yolov8n.pt"
+      },
+      "model_metadata": {
+        "model": "/home/ubuntu/cosmos-models/reason-2-8b",
+        "raw_response": "<think>\nOkay, let's see. The scenario describes a cyclist suddenly entering the road ahead of the ego vehicle, requiring immediate braking. The system's detection and response are evaluated based on the provided data.\n\nFirst, the cyclist is detected at frame 22 with a confidence of 92.5%. The action taken is braking starting at frame 27. The time between detection (frame 22) and the action (frame 27) is 5 frames. Assuming each frame represents a consistent time interval (e.g., 1 second per frame), this would be 5 seconds. However, in real-time driving, even a few seconds can be critical, especially for a jaywalking cyclist.\n\nThe action of braking is appropriate for a sudden obstacle. But the timing is crucial. If the cyclist is very close when detected, 5 seconds might not be enough to stop safely. The system's response is noted as braking, which aligns with the need to slow down. However, the failure category is marked as \"Not enough time to react and avoid collision,\" indicating that despite braking, the system might not have enough time to prevent a collision. This suggests that the detection happened late, leaving insufficient reaction time. The risk score of 4 reflects a high risk due to the close proximity and sudden appearance of the cyclist.\n</think>\n\n<answer>\n```json\n{\n  \"hazard_detected_in_time\": false,\n  \"action_safe\": false,\n  \"failure_category\": \"Not enough time to react and avoid collision\",\n  \"risk_score\": 4,\n  \"rationale\": \"The cyclist was detected at frame 22 with high confidence, but the braking action started at frame 27, indicating a 5-frame delay. This delay likely left insufficient time to fully stop and avoid a collision, especially given the sudden jaywalking action of the cyclist. The system recognized the hazard but failed to respond promptly enough to prevent a potential accident.\"\n}\n```",
+        "fps": 4,
+        "max_tokens": 4096
+      }
+    },
+    "created_at": "2026-06-26T05:56:43.928667"
+  }
+]

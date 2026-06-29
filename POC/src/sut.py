@@ -4,12 +4,7 @@ This module wraps YOLO v8 to detect pedestrians, vehicles, and other road users
 in generated scenario clips. The judge then evaluates whether detections were
 made correctly and in time.
 """
-import os
-from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-# Check if we're in mock mode
-MOCK_MODE = os.environ.get("MOCK_MODE", "").lower() in ("1", "true", "yes")
 
 
 class YOLOv8Detector:
@@ -47,9 +42,7 @@ class YOLOv8Detector:
         self.model_name = model_name
         self.confidence = confidence
         self.model = None
-        
-        if not MOCK_MODE:
-            self._load_model()
+        self._load_model()
     
     def _load_model(self):
         """Load the YOLO model."""
@@ -73,8 +66,12 @@ class YOLOv8Detector:
         Returns:
             Dict with detections and metadata
         """
-        if MOCK_MODE or self.model is None:
-            return self._mock_detect()
+        if self.model is None:
+            return {
+                "detections": [],
+                "hazards_detected": 0,
+                "total_detections": 0,
+            }
         
         # Run inference
         results = self.model(frame, conf=self.confidence, verbose=False)
@@ -142,30 +139,6 @@ class YOLOv8Detector:
             "num_frames": len(frames),
             "action": action,
             "model": self.model_name,
-        }
-    
-    def _mock_detect(self) -> Dict[str, Any]:
-        """Generate mock detection results for testing without GPU."""
-        import random
-        
-        # Simulate detection with some randomness
-        detected = random.random() > 0.15  # 85% detection rate
-        
-        if detected:
-            detections = [{
-                "class": random.choice(["person", "car", "bicycle"]),
-                "class_id": random.choice([0, 2, 1]),
-                "confidence": random.uniform(0.6, 0.95),
-                "bbox": [100, 150, 200, 350],
-                "is_hazard": random.random() > 0.3,
-            }]
-        else:
-            detections = []
-        
-        return {
-            "detections": detections,
-            "hazards_detected": sum(1 for d in detections if d.get("is_hazard")),
-            "total_detections": len(detections),
         }
     
     def _empty_result(self) -> Dict[str, Any]:

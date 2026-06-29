@@ -1,14 +1,14 @@
 """Cosmos Reason judge with structured verdict output."""
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import yaml
 
-from .cosmos_wrapper import CosmosReason
-
-MOCK_MODE = os.environ.get("MOCK_MODE", "0") == "1"
+try:
+    from .cosmos_wrapper import CosmosReason
+except ImportError:
+    from cosmos_wrapper import CosmosReason
 
 
 class Judge:
@@ -32,6 +32,7 @@ class Judge:
         video_frames: List[Any],
         sut_output: Dict[str, Any],
         scenario_metadata: Dict[str, Any],
+        video_path: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Evaluate a scenario and produce a structured verdict.
         
@@ -39,6 +40,9 @@ class Judge:
             video_frames: List of video frames from the generated scenario
             sut_output: Output from the system under test (detections, actions)
             scenario_metadata: Metadata about the scenario (weather, actors, etc.)
+            video_path: Optional path to the clip. When given it is passed to the
+                reason model, which samples the file directly (preferred over
+                re-encoding frames).
             
         Returns:
             Structured verdict dict matching the rubric schema
@@ -51,6 +55,7 @@ class Judge:
             video_frames=video_frames,
             system_prompt=self.rubric.get("system_prompt", ""),
             user_prompt=user_prompt,
+            video_path=video_path,
         )
         
         # Parse the structured response
@@ -65,6 +70,10 @@ class Judge:
         self, sut_output: Dict[str, Any], scenario_metadata: Dict[str, Any]
     ) -> str:
         """Build the analysis prompt with scenario context."""
+        definitions = self.rubric.get("failure_definitions", {}) or {}
+        category_lines = "\n".join(
+            f"  - {name}: {desc}" for name, desc in definitions.items()
+        )
         prompt = f"""
 Analyze this driving scenario and the system-under-test's response.
 
@@ -85,7 +94,10 @@ Evaluate whether the system detected the hazard in time and took appropriate act
 Return your verdict as a JSON object with these fields:
 - hazard_detected_in_time (bool)
 - action_safe (bool)
-- failure_category (string or null)
+- failure_category: choose exactly one of the labels below, or null only when both
+  hazard_detected_in_time and action_safe are true (a passing scenario). Do not
+  invent other labels and do not return "unknown".
+{category_lines}
 - risk_score (int 1-5)
 - rationale (string)
 """
@@ -133,10 +145,20 @@ Return your verdict as a JSON object with these fields:
         validated["risk_score"] = max(1, min(5, validated["risk_score"]))
         
         # Validate failure category
+        fc = validated["failure_category"]
+        if isinstance(fc, str):
+            fc = fc.strip().lower()
+            if fc in ("", "none", "null", "n/a", "na"):
+                fc = None
+            validated["failure_category"] = fc
         allowed = schema.get("failure_category", {}).get("allowed_values", [])
-        if allowed and validated["failure_category"] not in allowed:
+        if (
+            allowed
+            and validated["failure_category"] is not None
+            and validated["failure_category"] not in allowed
+        ):
             validated["failure_category"] = "unknown"
-        
+
         return validated
     
     def batch_evaluate(

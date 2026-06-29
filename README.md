@@ -76,7 +76,7 @@ The goal: find failure modes the test fleet never encountered, with no extra dat
 | Component | Requirement |
 |-----------|-------------|
 | AWS account | GPU quota approved for p5/p4d (generation) and g6e (judge) |
-| NVIDIA AI Enterprise | NGC API key from your company entitlement |
+| NVIDIA AI Enterprise | Optional. NGC API key only needed for NIM or Blackwell nightly images, not this A100 path |
 | Hugging Face | Token with access to `nvidia/cosmos3` collection |
 | Python | 3.10+ recommended |
 | Docker | With NVIDIA Container Toolkit |
@@ -143,13 +143,13 @@ docker run --rm --gpus all nvidia/cuda:12.4-base nvidia-smi
 ### 4. Authenticate
 
 ```bash
-# NGC
-docker login nvcr.io
+# Hugging Face (required - for Cosmos checkpoints)
+huggingface-cli login
+
+# NGC (optional - only for NIM or Blackwell nightly container images)
+# docker login nvcr.io
 # Username: $oauthtoken
 # Password: <your NGC API key>
-
-# Hugging Face
-huggingface-cli login
 ```
 
 ---

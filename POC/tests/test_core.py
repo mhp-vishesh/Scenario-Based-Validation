@@ -10,9 +10,6 @@ import pytest
 # Add src to path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-# Enable mock mode for tests
-os.environ["MOCK_MODE"] = "true"
-
 
 class TestUtils:
     """Tests for utility functions."""
@@ -167,102 +164,6 @@ class TestManifest:
         assert stats["failure_categories"]["missed_detection"] == 1
         
         os.unlink(path)
-
-
-class TestCosmosWrapper:
-    """Tests for Cosmos model wrappers (mock mode)."""
-    
-    def test_cosmos_predict_mock(self):
-        from cosmos_wrapper import CosmosPredict
-        
-        model = CosmosPredict()
-        result = model.generate(
-            input_frames=["frame1", "frame2"],
-            prompt="test prompt",
-            num_frames=10,
-        )
-        
-        assert "frames" in result
-        assert "metadata" in result
-        assert result["metadata"]["mock"] is True
-    
-    def test_cosmos_transfer_mock(self):
-        from cosmos_wrapper import CosmosTransfer
-        
-        model = CosmosTransfer()
-        result = model.generate(
-            input_frames=["frame1"],
-            control_inputs={"segmentation": None},
-            prompt="test",
-        )
-        
-        assert "frames" in result
-        assert result["metadata"]["mock"] is True
-    
-    def test_cosmos_reason_mock(self):
-        from cosmos_wrapper import CosmosReason
-        
-        model = CosmosReason()
-        result = model.analyze(
-            video_frames=["frame1", "frame2"],
-            prompt="Describe the scene",
-        )
-        
-        assert "text" in result
-        assert result["metadata"]["mock"] is True
-
-
-class TestJudge:
-    """Tests for the Judge class."""
-    
-    def test_judge_evaluate_mock(self):
-        from judge import Judge
-        
-        # Create temp rubric
-        rubric_content = """
-verdict:
-  type: enum
-  values: [pass, fail]
-  
-system_prompt: "You are a safety evaluator."
-"""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
-            f.write(rubric_content)
-            rubric_path = f.name
-        
-        judge = Judge(rubric_path=rubric_path)
-        result = judge.evaluate(
-            video_frames=["frame1", "frame2"],
-            sut_output={"detections": [], "action": "maintain"},
-            scenario_metadata={"weather": "rain"},
-        )
-        
-        assert "verdict" in result
-        assert result["verdict"] in ["pass", "fail"]
-        
-        os.unlink(rubric_path)
-
-
-class TestEvaluator:
-    """Tests for the Evaluator classes."""
-    
-    def test_realism_evaluator_mock(self):
-        from evaluator import RealistmEvaluator
-        
-        evaluator = RealistmEvaluator()
-        result = evaluator.score(frames=["frame1", "frame2"])
-        
-        assert "score" in result
-        assert 0 <= result["score"] <= 1
-    
-    def test_artifact_detector_mock(self):
-        from evaluator import ArtifactDetector
-        
-        detector = ArtifactDetector()
-        result = detector.detect(frames=["frame1", "frame2"])
-        
-        assert "artifacts" in result
-        assert "total_count" in result
 
 
 if __name__ == "__main__":

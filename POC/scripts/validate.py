@@ -105,8 +105,8 @@ def main():
             if clip_path.exists():
                 frames = get_video_frames(str(clip_path))
             else:
-                frames = []  # Mock mode
-                logger.warning(f"Clip not found: {clip_path}, using mock frames")
+                frames = []
+                logger.warning(f"Clip not found: {clip_path}, skipping frames")
             
             # Run system under test
             sut_output = sut.run(frames)
@@ -120,6 +120,7 @@ def main():
                 video_frames=frames,
                 sut_output=sut_output,
                 scenario_metadata=entry.get("scenario", {}),
+                video_path=str(clip_path) if clip_path.exists() else None,
             )
             
             # Run realism evaluator

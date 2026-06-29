@@ -47,3 +47,10 @@ logs/
 .env
 *.env
 secrets.yaml
+
+# SSH private keys (never commit)
+*.pem
+sbv-testing16062026.pem
+
+# Office temp lock files
+~$*

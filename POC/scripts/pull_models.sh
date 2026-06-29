@@ -74,10 +74,10 @@ echo "Downloading Model Checkpoints"
 echo "=========================================="
 echo ""
 echo "This will download several large files (~50GB total)."
-echo "Make sure you have accepted model licenses on HuggingFace:"
-echo "  - https://huggingface.co/nvidia-cosmos/Cosmos-Predict2.5-14B-Video2World"
-echo "  - https://huggingface.co/nvidia-cosmos/Cosmos-Transfer2.5-7B"
-echo "  - https://huggingface.co/nvidia-cosmos/Cosmos-Reason2"
+echo "Make sure you have accepted model access on HuggingFace (instant auto-approval):"
+echo "  - https://huggingface.co/nvidia/Cosmos-Predict2.5-14B"
+echo "  - https://huggingface.co/nvidia/Cosmos-Transfer2.5-2B"
+echo "  - https://huggingface.co/nvidia/Cosmos-Reason2-8B"
 echo ""
 read -p "Continue? (y/n) " -n 1 -r
 echo ""
@@ -87,28 +87,25 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 0
 fi
 
-# Cosmos Predict 2.5
+# Cosmos Predict 2.5 (generation - open access)
 echo ""
-echo "Downloading Cosmos Predict 2.5..."
-huggingface-cli download nvidia-cosmos/Cosmos-Predict2.5-14B-Video2World \
+echo "Downloading Cosmos Predict 2.5 14B..."
+huggingface-cli download nvidia/Cosmos-Predict2.5-14B \
     --local-dir "$MODELS_DIR/predict-2.5-14b" \
-    --include "*.safetensors" "*.json" "*.yaml" \
     --resume-download
 
-# Cosmos Transfer 2.5
+# Cosmos Transfer 2.5 (generation - auto-gated)
 echo ""
-echo "Downloading Cosmos Transfer 2.5..."
-huggingface-cli download nvidia-cosmos/Cosmos-Transfer2.5-7B \
-    --local-dir "$MODELS_DIR/transfer-2.5-7b" \
-    --include "*.safetensors" "*.json" "*.yaml" \
+echo "Downloading Cosmos Transfer 2.5 2B..."
+huggingface-cli download nvidia/Cosmos-Transfer2.5-2B \
+    --local-dir "$MODELS_DIR/transfer-2.5-2b" \
     --resume-download
 
-# Cosmos Reason 2 (judge model)
+# Cosmos Reason 2 (judge model - auto-gated)
 echo ""
-echo "Downloading Cosmos Reason 2..."
-huggingface-cli download nvidia-cosmos/Cosmos-Reason2 \
-    --local-dir "$MODELS_DIR/reason-2" \
-    --include "*.safetensors" "*.json" "*.yaml" \
+echo "Downloading Cosmos Reason 2 8B..."
+huggingface-cli download nvidia/Cosmos-Reason2-8B \
+    --local-dir "$MODELS_DIR/reason-2-8b" \
     --resume-download
 
 echo ""
@@ -128,8 +125,8 @@ echo "     pip install -r requirements.txt"
 echo ""
 echo "  2. Set environment variables:"
 echo "     export COSMOS_PREDICT_CHECKPOINT=$MODELS_DIR/predict-2.5-14b"
-echo "     export COSMOS_TRANSFER_CHECKPOINT=$MODELS_DIR/transfer-2.5-7b"
-echo "     export COSMOS_REASON_CHECKPOINT=$MODELS_DIR/reason-2"
+echo "     export COSMOS_TRANSFER_CHECKPOINT=$MODELS_DIR/transfer-2.5-2b"
+echo "     export COSMOS_REASON_CHECKPOINT=$MODELS_DIR/reason-2-8b"
 echo ""
 echo "  3. Run the generation pipeline:"
 echo "     python scripts/generate.py --seeds seeds/ --matrix config/scenario_matrix.yaml --output outputs/"

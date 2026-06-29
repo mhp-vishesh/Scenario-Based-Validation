@@ -80,7 +80,6 @@ RUN mkdir -p outputs seeds /opt/cosmos/models
 ENV COSMOS_PREDICT_CHECKPOINT=/opt/cosmos/models/predict-2.5-14b
 ENV COSMOS_TRANSFER_CHECKPOINT=/opt/cosmos/models/transfer-2.5-7b
 ENV COSMOS_REASON_CHECKPOINT=/opt/cosmos/models/reason-2
-ENV MOCK_MODE=false
 
 # Expose Streamlit port
 EXPOSE 8501
@@ -104,7 +103,6 @@ RUN mkdir -p outputs seeds /opt/cosmos/models
 
 ENV COSMOS_PREDICT_CHECKPOINT=/opt/cosmos/models/predict-2.5-14b
 ENV COSMOS_TRANSFER_CHECKPOINT=/opt/cosmos/models/transfer-2.5-7b
-ENV MOCK_MODE=false
 
 ENTRYPOINT ["python", "scripts/generate.py"]
 
@@ -119,6 +117,5 @@ COPY scripts/ ./scripts/
 RUN mkdir -p outputs /opt/cosmos/models
 
 ENV COSMOS_REASON_CHECKPOINT=/opt/cosmos/models/reason-2
-ENV MOCK_MODE=false
 
 ENTRYPOINT ["python", "scripts/validate.py"]
